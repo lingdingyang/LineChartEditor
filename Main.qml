@@ -7,16 +7,15 @@ Window {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Hello World")
+    title: qsTr("line chart editor")
 
     Button {
-        id: openFileButton
-        x: 0 // 设置按钮的横坐标
-        y: 5 // 设置纵坐标
-        text: "打开文件" // 按钮文本
+        id: btnOpenFile
+        x: 0
+        y: 5
+        text: "打开文件"
         width: 150
         height: 50
-        // 信号槽连接
         onClicked: {
             fileDialog.open()
         }
@@ -24,7 +23,7 @@ Window {
     }
     Label {
         id: labX
-        x: openFileButton.width + 5
+        x: btnOpenFile.width + 5
         y: 5
         height: 50
         text: "x="
@@ -33,8 +32,18 @@ Window {
         font.pixelSize: 25
     }
     TextInput {
+        id: editX
+        enabled: false
+        x: btnOpenFile.width + labX.width + 10
+        y: 5
+        height: 50
+        text: "未选择点"
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        font.pixelSize: 25
         function inputUpdate() {
-            if (controller.selectedLine === -1 || controller.selectedPoint === -1) {
+            if (controller.selectedLine === -1
+                    || controller.selectedPoint === -1) {
                 editX.enabled = false
                 editX.text = "未选择点"
                 return
@@ -46,21 +55,11 @@ Window {
                 editX.text = controller.x2[controller.selectedPoint]
             }
         }
-
-        enabled: false
-        id: editX
-        x: openFileButton.width + labX.width + 10
-        y: 5
-        height: 50
-        text: "未选择点"
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        font.pixelSize: 25
     }
 
     Label {
         id: labY
-        x: openFileButton.width + editX.width + labX.width + 15
+        x: btnOpenFile.width + editX.width + labX.width + 15
         y: 5
         height: 50
         text: "y="
@@ -70,8 +69,18 @@ Window {
     }
 
     TextInput {
+        id: editY
+        enabled: false
+        x: btnOpenFile.width + editX.width + labX.width + labY.width + 20
+        y: 5
+        height: 50
+        text: "未选择点"
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        font.pixelSize: 25
         function inputUpdate() {
-            if (controller.selectedLine === -1 || controller.selectedPoint === -1) {
+            if (controller.selectedLine === -1
+                    || controller.selectedPoint === -1) {
                 editY.enabled = false
                 editY.text = "未选择点"
                 return
@@ -83,77 +92,64 @@ Window {
                 editY.text = controller.y2[controller.selectedPoint]
             }
         }
-        enabled: false
-        id: editY
-        x: openFileButton.width + editX.width + labX.width + labY.width + 20
-        y: 5
-        height: 50
-        text: "未选择点"
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        font.pixelSize: 25
     }
     Button {
         id: btnEdit
-        x: openFileButton.width + editX.width + labX.width + labY.width
-           + editY.width + 25 // 设置按钮的横坐标
-        y: 5 // 设置纵坐标
-        text: "修改" // 按钮文本
+        x: btnOpenFile.width + editX.width + labX.width + labY.width + editY.width + 25
+        y: 5
+        text: "修改"
         width: 150
         height: 50
-        // 信号槽连接
+        font.pixelSize: 25
         onClicked: {
             console.log("btnEdit onClicked")
-            let editedX = parseFloat(editX.text)
-            let editedY = parseFloat(editY.text)
-            console.log(editedX, editedY)
-            if (editedX === NaN || editedY === NaN) {
+            let newX = parseFloat(editX.text)
+            let newY = parseFloat(editY.text)
+            console.log(newX, newY)
+            if (newX === NaN || newY === NaN) {
                 return
             }
-            controller.updatePoint(editedX, editedY)
+            controller.updatePoint(newX, newY)
             console.log(editX.text, editY.text)
-            scatter.moveTo(editedX, editedY)
+            scatter.moveTo(newX, newY)
         }
-        font.pixelSize: 25
     }
     Button {
         id: btnDelete
-        x: openFileButton.width + editX.width + labX.width + labY.width
-           + editY.width + btnEdit.width + 25 // 设置按钮的横坐标
-        y: 5 // 设置纵坐标
-        text: "删除" // 按钮文本
+        x: btnOpenFile.width + editX.width + labX.width + labY.width
+           + editY.width + btnEdit.width + 25
+        y: 5
+        text: "删除"
         width: 150
         height: 50
-        // 信号槽连接
+        font.pixelSize: 25
         onClicked: {
             console.log("btnDelete onClicked")
             controller.removePoint()
             scatter.removePoint()
         }
-        font.pixelSize: 25
     }
 
     Rectangle {
         x: 0
-        y: openFileButton.height + 5
+        y: btnOpenFile.height + 5
         width: parent.width
-        height: parent.height - openFileButton.height - 5
+        height: parent.height - btnOpenFile.height - 5
 
         ChartView {
-
-            title: "Line Chart"
             id: chartView
+            title: "Line Chart"
             anchors.fill: parent
             antialiasing: true
             ValueAxis {
                 id: valueAxisX
-                min: 0 // x轴最小值
-                max: 10 // x轴最大值
+                min: 0
+                max: 10
             }
             ValueAxis {
                 id: valueAxisY
-                min: 0 // y轴最小值
-                max: 20 // y轴最大值
+                min: 0
+                max: 20
             }
             LineSeries {
                 id: lineSeries1
@@ -161,7 +157,9 @@ Window {
                 axisX: valueAxisX
                 axisY: valueAxisY
                 pointsVisible: true
+                // 获取距鼠标最近的点，并高亮显示
                 onHovered: {
+                    // 计算到每个点的距离并记录最短距离的点的下标
                     let len = Math.abs(point.x - lineSeries1.at(
                                            0).x) + Math.abs(
                             point.y - lineSeries1.at(0).y)
@@ -176,25 +174,12 @@ Window {
                             selectedIdx = i
                         }
                     }
-                    if (scatter.count > 0) {
-                        if (scatter.at(0).x === lineSeries1.at(selectedIdx).x
-                                && scatter.y === lineSeries1.at(
-                                    selectedIdx).y) {
-                            return
-                        } else {
-                            scatter.replace(scatter.at(0).x, scatter.at(0).y,
-                                            lineSeries1.at(selectedIdx).x,
-                                            lineSeries1.at(selectedIdx).y)
-                            controller.selectedLine = 1
-                            controller.selectedPoint = selectedIdx
-                            return
-                        }
-                    }
+                    // 更新高亮显示
+                    scatter.moveTo(lineSeries1.at(selectedIdx).x,lineSeries1.at(selectedIdx).y)
                     controller.selectedLine = 1
                     controller.selectedPoint = selectedIdx
-                    scatter.append(lineSeries1.at(selectedIdx).x,
-                                   lineSeries1.at(selectedIdx).y)
                 }
+                // 刷新折线图
                 function updateList() {
                     console.log("updatelist1")
                     lineSeries1.clear()
@@ -220,7 +205,6 @@ Window {
                     valueAxisX.min = minnX
                     valueAxisY.max = maxnY
                     valueAxisY.min = minnY
-                    // chartView.update()
                 }
             }
             LineSeries {
@@ -229,6 +213,7 @@ Window {
                 axisX: valueAxisX
                 axisY: valueAxisY
                 pointsVisible: true
+                // 获取距鼠标最近的点，并高亮显示
                 onHovered: {
                     let len = Math.abs(point.x - lineSeries2.at(
                                            0).x) + Math.abs(
@@ -244,25 +229,11 @@ Window {
                             selectedIdx = i
                         }
                     }
-                    if (scatter.count > 0) {
-                        if (scatter.at(0).x === lineSeries2.at(selectedIdx).x
-                                && scatter.y === lineSeries2.at(
-                                    selectedIdx).y) {
-                            return
-                        } else {
-                            scatter.replace(scatter.at(0).x, scatter.at(0).y,
-                                            lineSeries2.at(selectedIdx).x,
-                                            lineSeries2.at(selectedIdx).y)
-                            controller.selectedLine = 2
-                            controller.selectedPoint = selectedIdx
-                            return
-                        }
-                    }
+                    scatter.moveTo(lineSeries2.at(selectedIdx).x,lineSeries2.at(selectedIdx).y)
                     controller.selectedLine = 2
                     controller.selectedPoint = selectedIdx
-                    scatter.append(lineSeries2.at(selectedIdx).x,
-                                   lineSeries2.at(selectedIdx).y)
                 }
+                 // 刷新折线图
                 function updateList() {
                     console.log("updatelist2")
                     lineSeries2.clear()
@@ -306,11 +277,11 @@ Window {
                     valueAxisX.min -= crossX * 0.01
                     valueAxisY.max += crossY * 0.1
                     valueAxisY.min -= crossY * 0.1
-                    // chartView.update()
                 }
             }
             ScatterSeries {
                 id: scatter
+                // 去除高亮显示
                 function removePoint() {
                     controller.selectedLine = -1
                     controller.selectedPoint = -1
@@ -318,7 +289,7 @@ Window {
                     editY.inputUpdate()
                     scatter.clear()
                 }
-
+                // 将高亮显示移动到指定位置
                 function moveTo(newX, newY) {
                     if (scatter.count > 0) {
                         if (scatter.at(0).x === newX && scatter.at(
@@ -330,6 +301,7 @@ Window {
                             return
                         }
                     }
+                    scatter.append(newX,newY)
                 }
             }
         }

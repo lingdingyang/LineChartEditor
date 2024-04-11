@@ -9,10 +9,12 @@ class Controller : public QObject
 {
     Q_OBJECT
 private:
+    // 保存两条线的数据
     QList<double> x1;
     QList<double> x2;
     QList<double> y1;
     QList<double> y2;
+    // 指定选中的线以及选中的点
     int selectedLine = -1;
     int selectedPoint = -1;
     Q_PROPERTY(QList<double> x1 READ getX1() WRITE setX1() FINAL CONSTANT)
@@ -24,9 +26,11 @@ private:
 
 private:
     void clear();
+    bool checkFile(const QString& path);
 public:
 
     explicit Controller(QObject *parent = nullptr);
+    // getter setter
     QList<double> getX1() const;
     void setX1(const QList<double> &newX1);
     QList<double> getX2() const;
@@ -41,14 +45,19 @@ public:
     void setSelectedPoint(int newSelectedPoint);
 
 public slots:
-    void readCSV(QUrl url);
-    void changeLine(double newX, double newY);
-    void updatePoint(double newX, double newY);
+    // 处理读取文件
+    void readCSV(const QUrl& url);
+    // 处理修改点的坐标
+    void updatePoint(const double newX, const double newY);
+    // 处理删除某点
     void removePoint();
 
 signals:
+    // 更新折线图的信号
     void listUpdate();
+    // 更新输入框的信号
     void inputUpdate();
+    // 删除选中点高亮的信号
     void removeSelectedPoint();
 };
 

@@ -64,7 +64,9 @@ void Controller::setSelectedPoint(int newSelectedPoint)
     emit inputUpdate();
 }
 
-void Controller::updatePoint( double newX, double newY)
+
+
+void Controller::updatePoint(const double newX, const double newY)
 {
     qDebug() << "updatePoint";
     qDebug() << newX << " " << newY;
@@ -107,52 +109,84 @@ void Controller::clear()
     emit removeSelectedPoint();
 }
 
+bool Controller::checkFile(const QString &path)
+{
+    QFile file(path);
+    if(!file.exists()) {
+        qDebug() << "不存在";
+        return false;
+    }
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "打开失败";
+        return false;
+    }
+    int cnt = 0;
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        in.readLine();
+        cnt++;
+    }
+    file.close();
+    if(cnt != 4) {
+        qDebug() << "文件行数错误";
+        return false;
+    }
+    return true;
+}
+
 Controller::Controller(QObject *parent)
     : QObject{parent}
 {
 }
 
-void Controller::readCSV(QUrl url)
+void Controller::readCSV(const QUrl& url)
 {
     qDebug() << url.path();
     QString path = url.path();
     path = path.right(path.length() - 1);
     qDebug() << path;
-    QFile file(path);
-    if(!file.exists()) {
-        qDebug() << "不存在";
+    if(!checkFile(path)) {
         return;
     }
+    QFile file(path);
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "打开失败";
-        return;
+        return ;
     }
     QTextStream aStream(&file);
     aStream.setAutoDetectUnicode(true);
-    QString str_x = aStream.readLine();
-    QString str_y = aStream.readLine();
-    QStringList list_x = str_x.split(',');
-    QStringList list_y = str_y.split(',');
+    QString str_x1 = aStream.readLine();
+    QString str_y1 = aStream.readLine();
+    QStringList list_x1 = str_x1.split(',');
+    QStringList list_y1 = str_y1.split(',');
+    QString str_x2 = aStream.readLine();
+    QString str_y2 = aStream.readLine();
+    QStringList list_x2 = str_x2.split(',');
+    QStringList list_y2 = str_y2.split(',');
+    if(list_x1.count() != list_y1.count()) {
+        qDebug() << "文件第一条线数据错误";
+        file.close();
+        return;
+    }
+    if(list_x2.count() != list_y2.count()) {
+        qDebug() << "文件第二条线数据错误";
+        file.close();
+        return;
+    }
     clear();
-    for(int i = 0; i < list_x.count(); i++) {
-        x1.append(list_x[i].toDouble());
+    for(int i = 0; i < list_x1.count(); i++) {
+        x1.append(list_x1[i].toDouble());
     }
-    for(int i = 0; i < list_y.count(); i++) {
-        y1.append(list_y[i].toDouble());
+    for(int i = 0; i < list_y1.count(); i++) {
+        y1.append(list_y1[i].toDouble());
     }
-    str_x = aStream.readLine();
-    str_y = aStream.readLine();
-    list_x = str_x.split(',');
-    list_y = str_y.split(',');
-    for(int i = 0; i < list_x.count(); i++) {
-        x2.append(list_x[i].toDouble());
+    for(int i = 0; i < list_x2.count(); i++) {
+        x2.append(list_x2[i].toDouble());
     }
-    for(int i = 0; i < list_y.count(); i++) {
-        y2.append(list_y[i].toDouble());
+    for(int i = 0; i < list_y2.count(); i++) {
+        y2.append(list_y2[i].toDouble());
     }
+    file.close();
     emit listUpdate();
 }
 
-void Controller::changeLine(double newX, double newY)
-{
-}
