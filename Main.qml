@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Dialogs
 import QtQuick.Controls
 import QtCharts
+import QtQuick.Layouts
 
 Window {
     visible: true
@@ -9,142 +10,141 @@ Window {
     height: 480
     title: qsTr("line chart editor")
 
-    Button {
-        id: btnOpenFile
-        x: 0
-        y: 5
-        text: "打开文件"
-        width: 150
+    RowLayout {
+        width: parent.width
         height: 50
-        onClicked: {
-            fileDialog.open()
-        }
-        font.pixelSize: 25
-    }
-    Label {
-        id: labX
-        x: btnOpenFile.width + 5
-        y: 5
-        height: 50
-        text: "x="
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        font.pixelSize: 25
-    }
-    TextInput {
-        id: editX
-        enabled: false
-        x: btnOpenFile.width + labX.width + 10
-        y: 5
-        height: 50
-        text: "未选择点"
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        font.pixelSize: 25
-        function inputUpdate() {
-            if (controller.selectedLine === -1
-                    || controller.selectedPoint === -1) {
-                editX.enabled = false
-                editX.text = "未选择点"
-                return
+        // anchors.centerIn: parent
+        Button {
+            id: btnOpenFile
+            text: "打开文件"
+            width: 150
+            height: 50
+            onClicked: {
+                fileDialog.open()
             }
-            editX.enabled = true
-            if (controller.selectedLine === 1) {
-                editX.text = controller.x1[controller.selectedPoint]
-            } else {
-                editX.text = controller.x2[controller.selectedPoint]
-            }
+            font.pixelSize: 25
         }
-    }
+        Row {
+            width: 300
+            height: 50
+            Label {
+                id: labX
+                width: 50
+                height: 50
+                text: "x="
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 25
+            }
+            TextInput {
+                id: editX
+                enabled: false
+                width: 150
+                height: 50
+                text: "未选择点"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 25
+                function inputUpdate() {
+                    if (controller.selectedLine === -1
+                            || controller.selectedPoint === -1) {
+                        editX.enabled = false
+                        editX.text = "未选择点"
+                        return
+                    }
+                    editX.enabled = true
+                    if (controller.selectedLine === 1) {
+                        editX.text = controller.x1[controller.selectedPoint]
+                    } else {
+                        editX.text = controller.x2[controller.selectedPoint]
+                    }
+                }
+            }
 
-    Label {
-        id: labY
-        x: btnOpenFile.width + editX.width + labX.width + 15
-        y: 5
-        height: 50
-        text: "y="
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        font.pixelSize: 25
-    }
+            Label {
+                id: labY
+                width: 50
+                height: 50
+                text: "y="
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 25
+            }
 
-    TextInput {
-        id: editY
-        enabled: false
-        x: btnOpenFile.width + editX.width + labX.width + labY.width + 20
-        y: 5
-        height: 50
-        text: "未选择点"
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        font.pixelSize: 25
-        function inputUpdate() {
-            if (controller.selectedLine === -1
-                    || controller.selectedPoint === -1) {
-                editY.enabled = false
-                editY.text = "未选择点"
-                return
-            }
-            editY.enabled = true
-            if (controller.selectedLine === 1) {
-                editY.text = controller.y1[controller.selectedPoint]
-            } else {
-                editY.text = controller.y2[controller.selectedPoint]
+            TextInput {
+                id: editY
+                enabled: false
+                width: 150
+                height: 50
+                text: "未选择点"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 25
+                function inputUpdate() {
+                    if (controller.selectedLine === -1
+                            || controller.selectedPoint === -1) {
+                        editY.enabled = false
+                        editY.text = "未选择点"
+                        return
+                    }
+                    editY.enabled = true
+                    if (controller.selectedLine === 1) {
+                        editY.text = controller.y1[controller.selectedPoint]
+                    } else {
+                        editY.text = controller.y2[controller.selectedPoint]
+                    }
+                }
             }
         }
-    }
-    Button {
-        id: btnEdit
-        x: btnOpenFile.width + editX.width + labX.width + labY.width + editY.width + 25
-        y: 5
-        text: "修改"
-        width: 150
-        height: 50
-        font.pixelSize: 25
-        enabled: false
-        onClicked: {
-            console.log("btnEdit onClicked")
-            let newX = parseFloat(editX.text)
-            let newY = parseFloat(editY.text)
-            console.log(newX, newY)
-            if (newX === NaN || newY === NaN) {
-                return
+
+        Button {
+            id: btnEdit
+            text: "修改"
+            width: 150
+            height: 50
+            font.pixelSize: 25
+            enabled: false
+            onClicked: {
+                console.log("btnEdit onClicked")
+                let newX = parseFloat(editX.text)
+                let newY = parseFloat(editY.text)
+                console.log(newX, newY)
+                if (newX === NaN || newY === NaN) {
+                    return
+                }
+                controller.updatePoint(newX, newY)
+                console.log(editX.text, editY.text)
+                scatter.moveTo(newX, newY)
             }
-            controller.updatePoint(newX, newY)
-            console.log(editX.text, editY.text)
-            scatter.moveTo(newX, newY)
-        }
-        function updateState(){
-            if (controller.selectedLine === -1
-                    || controller.selectedPoint === -1) {
-                btnEdit.enabled = false
-                return
+            function updateState() {
+                if (controller.selectedLine === -1
+                        || controller.selectedPoint === -1) {
+                    btnEdit.enabled = false
+                    return
+                }
+                btnEdit.enabled = true
             }
-            btnEdit.enabled = true
         }
-    }
-    Button {
-        id: btnDelete
-        x: btnOpenFile.width + editX.width + labX.width + labY.width
-           + editY.width + btnEdit.width + 25
-        y: 5
-        text: "删除"
-        width: 150
-        height: 50
-        font.pixelSize: 25
-        enabled: false
-        onClicked: {
-            console.log("btnDelete onClicked")
-            controller.removePoint()
-            scatter.removePoint()
-        }
-        function updateState(){
-            if (controller.selectedLine === -1
-                    || controller.selectedPoint === -1) {
-                btnDelete.enabled = false
-                return
+        Button {
+            id: btnDelete
+            text: "删除"
+            width: 150
+            height: 50
+            font.pixelSize: 25
+            enabled: false
+            onClicked: {
+                console.log("btnDelete onClicked")
+                controller.removePoint()
+                scatter.removePoint()
             }
-            btnDelete.enabled = true
+            function updateState() {
+                if (controller.selectedLine === -1
+                        || controller.selectedPoint === -1) {
+                    btnDelete.enabled = false
+                    return
+                }
+                btnDelete.enabled = true
+            }
         }
     }
 
@@ -193,7 +193,8 @@ Window {
                         }
                     }
                     // 更新高亮显示
-                    scatter.moveTo(lineSeries1.at(selectedIdx).x,lineSeries1.at(selectedIdx).y)
+                    scatter.moveTo(lineSeries1.at(selectedIdx).x,
+                                   lineSeries1.at(selectedIdx).y)
                     controller.selectedLine = 1
                     controller.selectedPoint = selectedIdx
                 }
@@ -247,11 +248,12 @@ Window {
                             selectedIdx = i
                         }
                     }
-                    scatter.moveTo(lineSeries2.at(selectedIdx).x,lineSeries2.at(selectedIdx).y)
+                    scatter.moveTo(lineSeries2.at(selectedIdx).x,
+                                   lineSeries2.at(selectedIdx).y)
                     controller.selectedLine = 2
                     controller.selectedPoint = selectedIdx
                 }
-                 // 刷新折线图
+                // 刷新折线图
                 function updateList() {
                     console.log("updatelist2")
                     lineSeries2.clear()
@@ -319,7 +321,7 @@ Window {
                             return
                         }
                     }
-                    scatter.append(newX,newY)
+                    scatter.append(newX, newY)
                 }
             }
         }
@@ -328,7 +330,7 @@ Window {
     FileDialog {
         id: fileDialog
         title: "请选择一个文件"
-        nameFilters: ["csv files(*.csv)","任意文件(*)"]
+        nameFilters: ["csv files(*.csv)", "任意文件(*)"]
         onAccepted: {
             controller.readCSV(fileDialog.currentFile)
         }
@@ -336,8 +338,8 @@ Window {
             console.log("取消")
         }
     }
-    MessageDialog{
-        id:msgDialog
+    MessageDialog {
+        id: msgDialog
         title: "提示"
     }
 
@@ -358,9 +360,9 @@ Window {
             console.log("onRemoveSelectedPoint")
             scatter.removePoint()
         }
-        function onShowDialog(msg){
-            console.log("onShowDialog",msg)
-            msgDialog.text=msg
+        function onShowDialog(msg) {
+            console.log("onShowDialog", msg)
+            msgDialog.text = msg
             msgDialog.open()
         }
     }
