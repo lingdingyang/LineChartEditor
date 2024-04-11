@@ -2,7 +2,7 @@
 #include <QQmlApplicationEngine>
 #include<QQmlContext>
 #include<QApplication>
-#include"handler.h"
+#include"controller.h"
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     Qt::QueuedConnection);
     engine.load(url);
     QQmlContext* context = engine.rootContext();
-    Handler handler;
-    context->setContextProperty("handler", &handler);
+    Controller controller;
+    context->setContextProperty("controller", &controller);
     return app.exec();
 }

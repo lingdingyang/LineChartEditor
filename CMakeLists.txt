@@ -18,7 +18,7 @@ qt_add_qml_module(appline_chart_editor
     QML_FILES
         Main.qml
     RESOURCES
-        SOURCES handler.h handler.cpp
+    SOURCES controller.h controller.cpp
         SOURCES
         RESOURCES .gitignore
         RESOURCES README.md

@@ -34,16 +34,16 @@ Window {
     }
     TextInput {
         function inputUpdate() {
-            if (handler.selectedLine === -1 || handler.selectedPoint === -1) {
+            if (controller.selectedLine === -1 || controller.selectedPoint === -1) {
                 editX.enabled = false
                 editX.text = "未选择点"
                 return
             }
             editX.enabled = true
-            if (handler.selectedLine === 1) {
-                editX.text = handler.x1[handler.selectedPoint]
+            if (controller.selectedLine === 1) {
+                editX.text = controller.x1[controller.selectedPoint]
             } else {
-                editX.text = handler.x2[handler.selectedPoint]
+                editX.text = controller.x2[controller.selectedPoint]
             }
         }
 
@@ -71,16 +71,16 @@ Window {
 
     TextInput {
         function inputUpdate() {
-            if (handler.selectedLine === -1 || handler.selectedPoint === -1) {
+            if (controller.selectedLine === -1 || controller.selectedPoint === -1) {
                 editY.enabled = false
                 editY.text = "未选择点"
                 return
             }
             editY.enabled = true
-            if (handler.selectedLine === 1) {
-                editY.text = handler.y1[handler.selectedPoint]
+            if (controller.selectedLine === 1) {
+                editY.text = controller.y1[controller.selectedPoint]
             } else {
-                editY.text = handler.y2[handler.selectedPoint]
+                editY.text = controller.y2[controller.selectedPoint]
             }
         }
         enabled: false
@@ -110,7 +110,7 @@ Window {
             if (editedX === NaN || editedY === NaN) {
                 return
             }
-            handler.updatePoint(editedX, editedY)
+            controller.updatePoint(editedX, editedY)
             console.log(editX.text, editY.text)
             scatter.moveTo(editedX, editedY)
         }
@@ -127,7 +127,7 @@ Window {
         // 信号槽连接
         onClicked: {
             console.log("btnDelete onClicked")
-            handler.removePoint()
+            controller.removePoint()
             scatter.removePoint()
         }
         font.pixelSize: 25
@@ -185,13 +185,13 @@ Window {
                             scatter.replace(scatter.at(0).x, scatter.at(0).y,
                                             lineSeries1.at(selectedIdx).x,
                                             lineSeries1.at(selectedIdx).y)
-                            handler.selectedLine = 1
-                            handler.selectedPoint = selectedIdx
+                            controller.selectedLine = 1
+                            controller.selectedPoint = selectedIdx
                             return
                         }
                     }
-                    handler.selectedLine = 1
-                    handler.selectedPoint = selectedIdx
+                    controller.selectedLine = 1
+                    controller.selectedPoint = selectedIdx
                     scatter.append(lineSeries1.at(selectedIdx).x,
                                    lineSeries1.at(selectedIdx).y)
                 }
@@ -200,20 +200,20 @@ Window {
                     lineSeries1.clear()
                     let minnX = 999, maxnX = -1
                     let minnY = 999, maxnY = -1
-                    // console.log(handler.x1)
-                    for (var i = 0; i < handler.x1.length; i++) {
-                        lineSeries1.append(handler.x1[i], handler.y1[i])
-                        if (minnX > handler.x1[i]) {
-                            minnX = handler.x1[i]
+                    // console.log(controller.x1)
+                    for (var i = 0; i < controller.x1.length; i++) {
+                        lineSeries1.append(controller.x1[i], controller.y1[i])
+                        if (minnX > controller.x1[i]) {
+                            minnX = controller.x1[i]
                         }
-                        if (minnY > handler.y1[i]) {
-                            minnY = handler.y1[i]
+                        if (minnY > controller.y1[i]) {
+                            minnY = controller.y1[i]
                         }
-                        if (maxnX < handler.x1[i]) {
-                            maxnX = handler.x1[i]
+                        if (maxnX < controller.x1[i]) {
+                            maxnX = controller.x1[i]
                         }
-                        if (maxnY < handler.y1[i]) {
-                            maxnY = handler.y1[i]
+                        if (maxnY < controller.y1[i]) {
+                            maxnY = controller.y1[i]
                         }
                     }
                     valueAxisX.max = maxnX
@@ -253,37 +253,37 @@ Window {
                             scatter.replace(scatter.at(0).x, scatter.at(0).y,
                                             lineSeries2.at(selectedIdx).x,
                                             lineSeries2.at(selectedIdx).y)
-                            handler.selectedLine = 2
-                            handler.selectedPoint = selectedIdx
+                            controller.selectedLine = 2
+                            controller.selectedPoint = selectedIdx
                             return
                         }
                     }
-                    handler.selectedLine = 2
-                    handler.selectedPoint = selectedIdx
+                    controller.selectedLine = 2
+                    controller.selectedPoint = selectedIdx
                     scatter.append(lineSeries2.at(selectedIdx).x,
                                    lineSeries2.at(selectedIdx).y)
                 }
                 function updateList() {
                     console.log("updatelist2")
                     lineSeries2.clear()
-                    // console.log(handler.x1)
-                    // console.log(typeof (handler.x2))
+                    // console.log(controller.x1)
+                    // console.log(typeof (controller.x2))
                     let minnX = 999, maxnX = -1
                     let minnY = 999, maxnY = -1
-                    for (var i = 0; i < handler.x2.length; i++) {
-                        // console.log(handler.x2[i], handler.y2[i])
-                        lineSeries2.append(handler.x2[i], handler.y2[i])
-                        if (minnX > handler.x2[i]) {
-                            minnX = handler.x2[i]
+                    for (var i = 0; i < controller.x2.length; i++) {
+                        // console.log(controller.x2[i], controller.y2[i])
+                        lineSeries2.append(controller.x2[i], controller.y2[i])
+                        if (minnX > controller.x2[i]) {
+                            minnX = controller.x2[i]
                         }
-                        if (minnY > handler.y2[i]) {
-                            minnY = handler.y2[i]
+                        if (minnY > controller.y2[i]) {
+                            minnY = controller.y2[i]
                         }
-                        if (maxnX < handler.x2[i]) {
-                            maxnX = handler.x2[i]
+                        if (maxnX < controller.x2[i]) {
+                            maxnX = controller.x2[i]
                         }
-                        if (maxnY < handler.y2[i]) {
-                            maxnY = handler.y2[i]
+                        if (maxnY < controller.y2[i]) {
+                            maxnY = controller.y2[i]
                         }
                     }
 
@@ -312,8 +312,8 @@ Window {
             ScatterSeries {
                 id: scatter
                 function removePoint() {
-                    handler.selectedLine = -1
-                    handler.selectedPoint = -1
+                    controller.selectedLine = -1
+                    controller.selectedPoint = -1
                     editX.inputUpdate()
                     editY.inputUpdate()
                     scatter.clear()
@@ -339,14 +339,14 @@ Window {
         id: fileDialog
         title: "请选择一个文件"
         onAccepted: {
-            handler.readCSV(fileDialog.currentFile)
+            controller.readCSV(fileDialog.currentFile)
         }
         onRejected: {
             console.log("取消")
         }
     }
     Connections {
-        target: handler
+        target: controller
         function onListUpdate() {
             lineSeries1.updateList()
             lineSeries2.updateList()

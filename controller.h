@@ -1,11 +1,11 @@
-#ifndef HANDLER_H
-#define HANDLER_H
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
 
 #include <QObject>
 #include<QDebug>
 #include<QUrl>
 #include<QFile>
-class Handler : public QObject
+class Controller : public QObject
 {
     Q_OBJECT
 private:
@@ -26,7 +26,7 @@ private:
     void clear();
 public:
 
-    explicit Handler(QObject *parent = nullptr);
+    explicit Controller(QObject *parent = nullptr);
     QList<double> getX1() const;
     void setX1(const QList<double> &newX1);
     QList<double> getX2() const;
@@ -52,4 +52,4 @@ signals:
     void removeSelectedPoint();
 };
 
-#endif // HANDLER_H
+#endif // CONTROLLER_H

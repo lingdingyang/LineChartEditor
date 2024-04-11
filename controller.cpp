@@ -1,70 +1,70 @@
-#include "handler.h"
+#include "controller.h"
 
-QList<double> Handler::getX1() const
+QList<double> Controller::getX1() const
 {
     return x1;
 }
 
-void Handler::setX1(const QList<double> &newX1)
+void Controller::setX1(const QList<double> &newX1)
 {
     x1 = newX1;
 }
 
-QList<double> Handler::getX2() const
+QList<double> Controller::getX2() const
 {
     return x2;
 }
 
-void Handler::setX2(const QList<double> &newX2)
+void Controller::setX2(const QList<double> &newX2)
 {
     x2 = newX2;
 }
 
-QList<double> Handler::getY1() const
+QList<double> Controller::getY1() const
 {
     return y1;
 }
 
-void Handler::setY1(const QList<double> &newY1)
+void Controller::setY1(const QList<double> &newY1)
 {
     y1 = newY1;
 }
 
-QList<double> Handler::getY2() const
+QList<double> Controller::getY2() const
 {
     return y2;
 }
 
-void Handler::setY2(const QList<double> &newY2)
+void Controller::setY2(const QList<double> &newY2)
 {
     y2 = newY2;
 }
 
-int Handler::getSelectedLine() const
+int Controller::getSelectedLine() const
 {
     return selectedLine;
 }
 
-void Handler::setSelectedLine(int newSelectedLine)
+void Controller::setSelectedLine(int newSelectedLine)
 {
     qDebug() << "setSelectedLine" << " " << newSelectedLine;
     selectedLine = newSelectedLine;
     emit inputUpdate();
 }
 
-int Handler::getSelectedPoint() const
+int Controller::getSelectedPoint() const
 {
     return selectedPoint;
 }
 
-void Handler::setSelectedPoint(int newSelectedPoint)
+void Controller::setSelectedPoint(int newSelectedPoint)
 {
     qDebug() << "setSelectedPoint" << " " << newSelectedPoint;
     selectedPoint = newSelectedPoint;
     emit inputUpdate();
 }
 
-void Handler::updatePoint( double newX, double newY)
+void Controller::updatePoint( double newX, double newY)
 {
     qDebug() << "updatePoint";
     qDebug() << newX << " " << newY;
@@ -81,7 +81,7 @@ void Handler::updatePoint( double newX, double newY)
     emit listUpdate();
 }
 
-void Handler::removePoint()
+void Controller::removePoint()
 {
     if(selectedPoint == -1 || selectedLine == -1) {
         return;
@@ -96,7 +96,7 @@ void Handler::removePoint()
     emit listUpdate();
 }
 
-void Handler::clear()
+void Controller::clear()
 {
     x1.clear();
     y1.clear();
@@ -107,12 +107,12 @@ void Handler::clear()
     emit removeSelectedPoint();
 }
 
-Handler::Handler(QObject *parent)
+Controller::Controller(QObject *parent)
     : QObject{parent}
 {
 }
 
-void Handler::readCSV(QUrl url)
+void Controller::readCSV(QUrl url)
 {
     qDebug() << url.path();
     QString path = url.path();
@@ -153,6 +153,6 @@ void Handler::readCSV(QUrl url)
     emit listUpdate();
 }
 
-void Handler::changeLine(double newX, double newY)
+void Controller::changeLine(double newX, double newY)
 {
 }
