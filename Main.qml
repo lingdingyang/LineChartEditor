@@ -310,6 +310,7 @@ Window {
     FileDialog {
         id: fileDialog
         title: "请选择一个文件"
+        nameFilters: ["csv files(*.csv)","任意文件(*)"]
         onAccepted: {
             controller.readCSV(fileDialog.currentFile)
         }
