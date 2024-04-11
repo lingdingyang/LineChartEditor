@@ -113,10 +113,12 @@ bool Controller::checkFile(const QString &path)
 {
     QFile file(path);
     if(!file.exists()) {
+        emit showDialog("文件不存在");
         qDebug() << "不存在";
         return false;
     }
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        emit showDialog("文件打开失败");
         qDebug() << "打开失败";
         return false;
     }
@@ -128,6 +130,7 @@ bool Controller::checkFile(const QString &path)
     }
     file.close();
     if(cnt != 4) {
+        emit showDialog("文件行数错误");
         qDebug() << "文件行数错误";
         return false;
     }
@@ -150,6 +153,7 @@ void Controller::readCSV(const QUrl& url)
     }
     QFile file(path);
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        emit showDialog("文件打开失败");
         qDebug() << "打开失败";
         return ;
     }
@@ -164,11 +168,13 @@ void Controller::readCSV(const QUrl& url)
     QStringList list_x2 = str_x2.split(',');
     QStringList list_y2 = str_y2.split(',');
     if(list_x1.count() != list_y1.count()) {
+        emit showDialog("文件第一条线数据错误");
         qDebug() << "文件第一条线数据错误";
         file.close();
         return;
     }
     if(list_x2.count() != list_y2.count()) {
+        emit showDialog("文件第二条线数据错误");
         qDebug() << "文件第二条线数据错误";
         file.close();
         return;

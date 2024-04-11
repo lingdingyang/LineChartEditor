@@ -31,6 +31,7 @@ public:
 
     explicit Controller(QObject *parent = nullptr);
     // getter setter
+    // setSelectedPoint和setSelectedLine方法会发送信号通知qml选择点改变来修改高亮显示
     QList<double> getX1() const;
     void setX1(const QList<double> &newX1);
     QList<double> getX2() const;
@@ -59,6 +60,7 @@ signals:
     void inputUpdate();
     // 删除选中点高亮的信号
     void removeSelectedPoint();
+    void showDialog(QString msg);
 };
 
 #endif // CONTROLLER_H

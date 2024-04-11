@@ -101,6 +101,7 @@ Window {
         width: 150
         height: 50
         font.pixelSize: 25
+        enabled: false
         onClicked: {
             console.log("btnEdit onClicked")
             let newX = parseFloat(editX.text)
@@ -113,6 +114,14 @@ Window {
             console.log(editX.text, editY.text)
             scatter.moveTo(newX, newY)
         }
+        function updateState(){
+            if (controller.selectedLine === -1
+                    || controller.selectedPoint === -1) {
+                btnEdit.enabled = false
+                return
+            }
+            btnEdit.enabled = true
+        }
     }
     Button {
         id: btnDelete
@@ -123,10 +132,19 @@ Window {
         width: 150
         height: 50
         font.pixelSize: 25
+        enabled: false
         onClicked: {
             console.log("btnDelete onClicked")
             controller.removePoint()
             scatter.removePoint()
+        }
+        function updateState(){
+            if (controller.selectedLine === -1
+                    || controller.selectedPoint === -1) {
+                btnDelete.enabled = false
+                return
+            }
+            btnDelete.enabled = true
         }
     }
 
@@ -318,6 +336,11 @@ Window {
             console.log("取消")
         }
     }
+    MessageDialog{
+        id:msgDialog
+        title: "提示"
+    }
+
     Connections {
         target: controller
         function onListUpdate() {
@@ -328,10 +351,17 @@ Window {
             console.log("onEditUpdate")
             editX.inputUpdate()
             editY.inputUpdate()
+            btnDelete.updateState()
+            btnEdit.updateState()
         }
         function onRemoveSelectedPoint() {
             console.log("onRemoveSelectedPoint")
             scatter.removePoint()
+        }
+        function onShowDialog(msg){
+            console.log("onShowDialog",msg)
+            msgDialog.text=msg
+            msgDialog.open()
         }
     }
 }
