@@ -4,7 +4,7 @@ project(line_chart_editor VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Charts Core Gui Qml Quick)
+find_package(Qt6 6.4 REQUIRED COMPONENTS Charts  Quick)
 
 qt_standard_project_setup()
 
@@ -38,9 +38,6 @@ set_target_properties(appline_chart_editor PROPERTIES
 target_link_libraries(appline_chart_editor
     PUBLIC
     Qt::Charts
-    Qt::Core
-    Qt::Gui
-    Qt::Qml
     Qt::Quick
 )
 

@@ -110,6 +110,8 @@ Window {
                 let newY = parseFloat(editY.text)
                 console.log(newX, newY)
                 if (newX === NaN || newY === NaN) {
+                    msgDialog.text = "输入不合法"
+                    msgDialog.open()
                     return
                 }
                 controller.updatePoint(newX, newY)
@@ -293,8 +295,8 @@ Window {
                     }
                     let crossX = valueAxisX.max - valueAxisX.min
                     let crossY = valueAxisY.max - valueAxisY.min
-                    valueAxisX.max += crossX * 0.01
-                    valueAxisX.min -= crossX * 0.01
+                    valueAxisX.max += crossX * 0.1
+                    valueAxisX.min -= crossX * 0.1
                     valueAxisY.max += crossY * 0.1
                     valueAxisY.min -= crossY * 0.1
                 }
